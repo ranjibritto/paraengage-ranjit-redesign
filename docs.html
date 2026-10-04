@@ -1,0 +1,509 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>ParaEngage Developer Docs</title>
+<link href="https://fonts.googleapis.com/css2?family=Geist:wght@400;500;600;700&family=Geist+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+/* Docs portal: top bar, left nav, centred prose column, sticky right TOC. Dark-first to match the site, with a light theme. */
+:root{color-scheme:dark;--bg:#070A12;--panel:#0A0E18;--surface:#0E1320;--line:#1E2638;--fg:#F2F4F8;--muted:#9AA4B8;--accent:#F43D4D;--link:#7DBBF5;--code:#0B101B;--ok:#6FE08F;--font:"Geist",system-ui,sans-serif;--mono:"Geist Mono",ui-monospace,monospace}
+@media (prefers-color-scheme: light){:root:not([data-theme="dark"]){color-scheme:light;--bg:#FFFFFF;--panel:#F8F9FB;--surface:#F3F4F7;--line:#E3E6EC;--fg:#111827;--muted:#5B6472;--link:#0D63B0;--code:#111827;--ok:#167A2B}}
+:root[data-theme="light"]{color-scheme:light;--bg:#FFFFFF;--panel:#F8F9FB;--surface:#F3F4F7;--line:#E3E6EC;--fg:#111827;--muted:#5B6472;--link:#0D63B0;--code:#111827;--ok:#167A2B}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--fg);font-family:var(--font);font-size:15px;line-height:1.6}
+a{color:var(--link);text-decoration:none}a:hover{text-decoration:underline}
+code,pre,kbd{font-family:var(--mono)}
+.top{position:sticky;top:env(safe-area-inset-top,0px);z-index:20;background:var(--panel);border-bottom:1px solid var(--line);display:flex;align-items:center;gap:18px;padding:0 20px;height:56px}
+.top .brand{display:flex;align-items:center;gap:10px;font-weight:600}
+.top .brand span{color:var(--muted);font-weight:500}
+.top .search{flex:1 1 200px;max-width:420px;display:flex;align-items:center;gap:8px;background:var(--surface);border:1px solid var(--line);border-radius:8px;padding:0 12px;height:36px;color:var(--muted);font-size:14px}
+.top .search input{flex:1;min-width:0;background:transparent;border:0;color:var(--fg);font:inherit;outline:none}
+.top .search kbd{font-size:11px;border:1px solid var(--line);border-radius:4px;padding:1px 6px}
+.top nav{margin-left:auto;display:flex;gap:18px;font-size:14px}
+.top nav a{color:var(--fg)}
+.top .cta{background:var(--accent);color:#fff;border-radius:8px;padding:8px 14px;font-weight:600;font-size:14px}
+.wrap{display:flex;flex-wrap:wrap;max-width:1440px;margin:0 auto}
+.side{flex:0 0 268px;max-width:100%;border-right:1px solid var(--line);padding:24px 16px 48px;font-size:14px}
+.side h4{margin:18px 10px 6px;font-size:11px;letter-spacing:.1em;color:var(--muted);font-weight:600}
+.side a{display:block;color:var(--fg);padding:6px 10px;border-radius:6px}
+.side a:hover{background:var(--surface);text-decoration:none}
+.side a.on{background:var(--surface);color:var(--link);font-weight:600}
+.side .sub a{padding-left:24px;color:var(--muted)}
+main{flex:999 1 560px;min-width:0;padding:36px 40px 96px}
+.prose{max-width:760px}
+.crumb{font-size:13px;color:var(--muted);margin-bottom:12px}
+h1{font-size:38px;font-weight:700;letter-spacing:-.03em;line-height:1.1;margin:0 0 12px;text-wrap:balance}
+h2{font-size:24px;font-weight:700;letter-spacing:-.02em;margin:56px 0 12px;padding-top:24px;border-top:1px solid var(--line)}
+h3{font-size:18px;font-weight:600;margin:32px 0 8px}
+p{margin:0 0 14px}
+.lead{font-size:18px;color:var(--muted)}
+.cards{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:12px;margin:18px 0}
+.card{display:block;background:var(--surface);border:1px solid var(--line);border-radius:12px;padding:16px;color:var(--fg)}
+.card:hover{border-color:var(--link);text-decoration:none}
+.card b{display:block;margin-bottom:4px}.card span{font-size:13px;color:var(--muted)}
+.steps{counter-reset:s;margin:0;padding:0;list-style:none}
+.steps li{counter-increment:s;position:relative;padding:0 0 22px 44px;border-left:1px solid var(--line);margin-left:14px}
+.steps li::before{content:counter(s);position:absolute;left:-15px;top:0;width:28px;height:28px;border-radius:50%;background:var(--accent);color:#fff;font-size:13px;font-weight:700;display:flex;align-items:center;justify-content:center}
+.steps li:last-child{border-color:transparent}
+.steps b{display:block;margin-bottom:4px}
+.codebox{background:var(--code);color:#D7DCE6;border:1px solid var(--line);border-radius:12px;overflow:hidden;margin:14px 0}
+.codebox .tabs{display:flex;gap:0;border-bottom:1px solid #1E2638;font-size:12px;font-family:var(--mono);overflow-x:auto}
+.codebox .tabs button{background:transparent;border:0;border-bottom:2px solid transparent;color:#9AA4B8;padding:10px 14px;cursor:pointer;font:inherit;white-space:nowrap}
+.codebox .tabs button.on{color:#F2F4F8;border-bottom-color:var(--accent)}
+.codebox .tabs .copy{margin-left:auto;color:#9AA4B8}
+.codebox pre{margin:0;padding:16px 18px;overflow-x:auto;font-size:13px;line-height:1.7}
+.codebox pre.hidden{display:none}
+.k{color:#C4A8FF}.s{color:#6FE08F}.n{color:#FFC46B}.c{color:#7C879D}.m{color:#8CC4F5}
+table{width:100%;border-collapse:collapse;font-size:14px;margin:12px 0 18px}
+th{text-align:left;font-size:12px;letter-spacing:.06em;color:var(--muted);font-weight:600;padding:8px 10px;border-bottom:1px solid var(--line)}
+td{padding:10px;border-bottom:1px solid var(--line);vertical-align:top}
+td code{background:var(--surface);border-radius:4px;padding:1px 6px;font-size:13px}
+.tbl{overflow-x:auto}
+.req{display:inline-block;font-size:11px;font-weight:600;border-radius:4px;padding:1px 6px;margin-left:6px;background:#3A1620;color:#FF9AA3}
+.opt{display:inline-block;font-size:11px;font-weight:600;border-radius:4px;padding:1px 6px;margin-left:6px;background:var(--surface);color:var(--muted)}
+.ep{display:flex;flex-wrap:wrap;align-items:center;gap:10px;background:var(--surface);border:1px solid var(--line);border-radius:10px;padding:10px 14px;font-family:var(--mono);font-size:14px;margin:12px 0}
+.ep .verb{font-weight:700;border-radius:6px;padding:2px 8px;font-size:12px}
+.post{background:#10301C;color:#6FE08F}.get{background:#0F2A47;color:#8CC4F5}.del{background:#3A1620;color:#FF9AA3}
+.note{border-left:3px solid var(--link);background:var(--surface);border-radius:0 10px 10px 0;padding:12px 16px;margin:16px 0;font-size:14px}
+.note.warn{border-color:var(--accent)}
+.toc{flex:0 0 220px;max-width:100%;padding:36px 20px;font-size:13px}
+.toc div{position:sticky;top:80px}
+.toc h5{margin:0 0 8px;font-size:11px;letter-spacing:.1em;color:var(--muted)}
+.toc a{display:block;color:var(--muted);padding:4px 0}
+.toc a:hover{color:var(--fg);text-decoration:none}
+.pill{display:inline-block;font-family:var(--mono);font-size:11px;letter-spacing:.08em;border-radius:6px;padding:3px 8px;background:var(--surface);color:var(--muted)}
+footer{border-top:1px solid var(--line);padding:24px 40px;font-size:13px;color:var(--muted);display:flex;flex-wrap:wrap;gap:16px;justify-content:space-between}
+@media (max-width:1100px){.toc{display:none}}
+@media (max-width:860px){.side{flex:1 1 100%;border-right:0;border-bottom:1px solid var(--line)}main{padding:28px 20px 64px}.top nav{display:none}}
+</style>
+
+</head>
+<body>
+<header class="top">
+<div class="brand"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" aria-hidden="true"><circle cx="12" cy="12" r="10" stroke="#F43D4D" stroke-width="2"/><circle cx="12" cy="12" r="3" fill="#F43D4D"/></svg>ParaEngage <span>Docs</span></div>
+<label class="search"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="M20 20l-3.5-3.5"/></svg><input id="q" type="search" placeholder="Search docs" aria-label="Search docs"><kbd>/</kbd></label>
+<nav><a href="#quickstart">Quickstart</a><a href="#reference">API reference</a><a href="#sdks">SDKs</a><a href="#webhooks">Webhooks</a><a href="#status">Status</a><a class="cta" href="https://console.paraengage.com/">Console</a></nav>
+</header>
+
+<div class="wrap">
+<aside class="side" aria-label="Docs navigation">
+<h4>GET STARTED</h4>
+<a class="on" href="#top">Overview</a>
+<a href="#quickstart">Quickstart: first call in 5 minutes</a>
+<a href="#auth">Authentication</a>
+<a href="#sandbox">Test mode and sandbox numbers</a>
+<a href="#errors">Errors and rate limits</a>
+<h4>VOICE</h4>
+<a href="#ref-calls">Click to Call API</a>
+<div class="sub"><a href="#ref-calls">Create a call</a><a href="#ref-get-call">Get a call</a><a href="#ref-recordings">Recordings</a></div>
+<a href="#ref-numbers">Numbers API</a>
+<a href="#ref-ivr">Virtual Receptionist (IVR)</a>
+<a href="#ref-robo">Robo Call campaigns</a>
+<h4>MESSAGING</h4>
+<a href="#ref-wa">WhatsApp API</a>
+<a href="#ref-sms">SMS and OTP API</a>
+<a href="#ref-rcs">RCS API</a>
+<a href="#ref-email">Email API</a>
+<a href="#ref-tiny">Tiny URL API</a>
+<h4>AI</h4>
+<a href="#ref-agent">AI Agent API</a>
+<a href="#ref-voicebot">AI Voice Bot</a>
+<a href="#ref-chatbot">Chat Bot widget</a>
+<h4>VIDEO</h4>
+<a href="#ref-video">Parameet rooms API</a>
+<h4>PLATFORM</h4>
+<a href="#webhooks">Webhooks</a>
+<a href="#sdks">SDKs and tools</a>
+<a href="#wallet">Wallet and usage API</a>
+<a href="#changelog">Changelog</a>
+<a href="#glossary">Glossary</a>
+</aside>
+
+<main id="top">
+<div class="prose">
+<div class="crumb">Docs / For developers</div>
+<h1>ParaEngage for developers</h1>
+<p class="lead">One API key, one base URL and one wallet across voice, messaging, video and AI. Everything on this page is a draft reference built to be implemented. Values are illustrative until Parahit publishes the production spec.</p>
+<div class="ep"><span class="pill">BASE URL</span> https://api.paraengage.com/v1 <span class="pill" style="margin-left:auto">JSON · HTTPS · UTF-8</span></div>
+
+<h2 id="popular" style="margin-top:28px;border:0;padding-top:0">Popular developer documentation</h2>
+<div class="cards">
+<a class="card" href="#quickstart"><b>Quickstart</b><span>Make your first Click to Call in under 5 minutes.</span></a>
+<a class="card" href="#ref-wa"><b>Send a WhatsApp template</b><span>Approved templates, variables and media.</span></a>
+<a class="card" href="#ref-sms"><b>Send an OTP</b><span>DLT-compliant transactional SMS with verify endpoint.</span></a>
+<a class="card" href="#webhooks"><b>Receive webhooks</b><span>Call status, delivery receipts, inbound messages.</span></a>
+<a class="card" href="#ref-agent"><b>Deploy an AI agent</b><span>Create an agent, attach it to a number or WhatsApp line.</span></a>
+<a class="card" href="#sdks"><b>SDKs</b><span>Node.js, Python, PHP, Java, Go.</span></a>
+</div>
+
+<h2 id="quickstart">Quickstart: first call in 5 minutes</h2>
+<p>This walkthrough bridges your agent and a customer through a masked ParaEngage number and delivers the call record to your webhook.</p>
+<ol class="steps">
+<li><b>Create an account and verify your business</b>Sign up at the console. Verification is instant for GST-registered businesses and adds 1,000 free credits to your wallet.</li>
+<li><b>Get your API key</b>Console → Build → API keys. Test keys start with <code>pe_test_</code> and never charge the wallet. Live keys start with <code>pe_live_</code>.</li>
+<li><b>Buy or pick a number</b>Numbers → Buy. Or use the sandbox number <code>+91 80 0000 0000</code> with a test key.</li>
+<li><b>Make the call</b>
+<div class="codebox" data-tabs>
+<div class="tabs"><button class="on" data-t="curl">cURL</button><button data-t="node">Node.js</button><button data-t="py">Python</button><button data-t="php">PHP</button><button class="copy" data-copy>Copy</button></div>
+<pre data-t="curl">curl -X POST https://api.paraengage.com/v1/calls \
+  -H <span class="s">"Authorization: Bearer $PARAENGAGE_API_KEY"</span> \
+  -H <span class="s">"Content-Type: application/json"</span> \
+  -d <span class="s">'{
+    "from": "+918000000000",
+    "agent": "+919800000001",
+    "customer": "+919700000002",
+    "record": true,
+    "webhook_url": "https://yourcrm.in/hooks/paraengage"
+  }'</span></pre>
+<pre class="hidden" data-t="node"><span class="k">import</span> ParaEngage <span class="k">from</span> <span class="s">"@paraengage/sdk"</span>;
+<span class="k">const</span> pe = <span class="k">new</span> ParaEngage(process.env.PARAENGAGE_API_KEY);
+
+<span class="k">const</span> call = <span class="k">await</span> pe.calls.create({
+  from: <span class="s">"+918000000000"</span>,
+  agent: <span class="s">"+919800000001"</span>,
+  customer: <span class="s">"+919700000002"</span>,
+  record: <span class="n">true</span>,
+  webhookUrl: <span class="s">"https://yourcrm.in/hooks/paraengage"</span>
+});
+console.log(call.id, call.status); <span class="c">// call_01HX..., "ringing"</span></pre>
+<pre class="hidden" data-t="py"><span class="k">from</span> paraengage <span class="k">import</span> ParaEngage
+pe = ParaEngage(api_key=os.environ[<span class="s">"PARAENGAGE_API_KEY"</span>])
+
+call = pe.calls.create(
+    from_=<span class="s">"+918000000000"</span>,
+    agent=<span class="s">"+919800000001"</span>,
+    customer=<span class="s">"+919700000002"</span>,
+    record=<span class="n">True</span>,
+    webhook_url=<span class="s">"https://yourcrm.in/hooks/paraengage"</span>,
+)
+print(call.id, call.status)</pre>
+<pre class="hidden" data-t="php"><span class="k">$pe</span> = <span class="k">new</span> ParaEngage\Client(getenv(<span class="s">'PARAENGAGE_API_KEY'</span>));
+<span class="k">$call</span> = <span class="k">$pe</span>->calls->create([
+  <span class="s">'from'</span> => <span class="s">'+918000000000'</span>,
+  <span class="s">'agent'</span> => <span class="s">'+919800000001'</span>,
+  <span class="s">'customer'</span> => <span class="s">'+919700000002'</span>,
+  <span class="s">'record'</span> => <span class="n">true</span>,
+  <span class="s">'webhook_url'</span> => <span class="s">'https://yourcrm.in/hooks/paraengage'</span>,
+]);
+echo <span class="k">$call</span>->id;</pre>
+</div>
+</li>
+<li><b>Read the response</b>
+<div class="codebox"><div class="tabs"><button class="on">201 Created</button></div><pre>{
+  <span class="m">"id"</span>: <span class="s">"call_01HXK3M9Q2R7"</span>,
+  <span class="m">"status"</span>: <span class="s">"ringing"</span>,
+  <span class="m">"from"</span>: <span class="s">"+918000000000"</span>,
+  <span class="m">"agent"</span>: <span class="s">"+919800000001"</span>,
+  <span class="m">"customer"</span>: <span class="s">"+919700000002"</span>,
+  <span class="m">"record"</span>: <span class="n">true</span>,
+  <span class="m">"created_at"</span>: <span class="s">"2026-10-04T09:30:12+05:30"</span>,
+  <span class="m">"estimated_cost"</span>: { <span class="m">"currency"</span>: <span class="s">"INR"</span>, <span class="m">"per_minute"</span>: <span class="n">0.75</span> }
+}</pre></div>
+</li>
+<li><b>Receive the webhook</b>When the call ends, ParaEngage POSTs a <code>call.completed</code> event to your URL. See <a href="#webhooks">Webhooks</a> for the payload and signature check.</li>
+</ol>
+
+<h2 id="auth">Authentication</h2>
+<p>Every request carries a bearer token. Keys are created per workspace in the console and can be scoped to products.</p>
+<div class="codebox"><div class="tabs"><button class="on">Header</button></div><pre>Authorization: Bearer pe_live_9f3a7c...   <span class="c"># live key, charges the wallet</span>
+Authorization: Bearer pe_test_2b81e4...   <span class="c"># test key, sandbox only, never charges</span></pre></div>
+<div class="tbl"><table><thead><tr><th>Key type</th><th>Prefix</th><th>What it can do</th></tr></thead><tbody>
+<tr><td>Live</td><td><code>pe_live_</code></td><td>Real calls and messages. Billed from the wallet.</td></tr>
+<tr><td>Test</td><td><code>pe_test_</code></td><td>Sandbox numbers only. Returns realistic responses and fires webhooks with <code>"test": true</code>.</td></tr>
+<tr><td>Restricted</td><td><code>pe_rk_</code></td><td>Live, limited to named products (for example SMS only) and optional IP allowlist.</td></tr>
+</tbody></table></div>
+<div class="note warn">Never ship a live key in a browser or mobile app. Use the <a href="#ref-chatbot">Chat Bot widget</a> token or a server-side proxy.</div>
+
+<h2 id="sandbox">Test mode and sandbox numbers</h2>
+<p>With a test key, these numbers return fixed outcomes so you can exercise every branch of your code.</p>
+<div class="tbl"><table><thead><tr><th>Number</th><th>Behaviour</th></tr></thead><tbody>
+<tr><td><code>+919700000002</code></td><td>Answers after 3 seconds. Webhook: <code>call.completed</code>, 42 s duration.</td></tr>
+<tr><td><code>+919700000003</code></td><td>Busy. Webhook: <code>call.failed</code>, reason <code>busy</code>.</td></tr>
+<tr><td><code>+919700000004</code></td><td>No answer after 30 s. Reason <code>no_answer</code>.</td></tr>
+<tr><td><code>+919700000005</code></td><td>Messages: delivered then read after 5 s.</td></tr>
+<tr><td><code>+919700000006</code></td><td>Messages: undelivered, reason <code>dnd</code>.</td></tr>
+</tbody></table></div>
+
+<h2 id="errors">Errors and rate limits</h2>
+<p>Errors use standard HTTP codes with a machine-readable body. Rate limits are per key and returned in headers.</p>
+<div class="codebox"><div class="tabs"><button class="on">402 Payment Required</button></div><pre>{
+  <span class="m">"error"</span>: {
+    <span class="m">"code"</span>: <span class="s">"insufficient_balance"</span>,
+    <span class="m">"message"</span>: <span class="s">"Wallet balance is ₹12.40. This call needs at least ₹50.00."</span>,
+    <span class="m">"doc_url"</span>: <span class="s">"https://docs.paraengage.com/errors#insufficient_balance"</span>,
+    <span class="m">"request_id"</span>: <span class="s">"req_01HXK..."</span>
+  }
+}</pre></div>
+<div class="tbl"><table><thead><tr><th>Code</th><th>Meaning</th></tr></thead><tbody>
+<tr><td><code>400 invalid_request</code></td><td>A field is missing or malformed. <code>error.param</code> names it.</td></tr>
+<tr><td><code>401 unauthorized</code></td><td>Missing or revoked key.</td></tr>
+<tr><td><code>402 insufficient_balance</code></td><td>Top up the wallet or enable auto-recharge.</td></tr>
+<tr><td><code>403 product_not_enabled</code></td><td>Turn the product on in the console. Price is shown there first.</td></tr>
+<tr><td><code>404 not_found</code></td><td>No object with that id in this workspace.</td></tr>
+<tr><td><code>422 template_not_approved</code></td><td>WhatsApp or DLT template is pending or rejected.</td></tr>
+<tr><td><code>429 rate_limited</code></td><td>Retry after <code>Retry-After</code> seconds. Default 50 requests/second per key.</td></tr>
+</tbody></table></div>
+
+<h2 id="reference">API reference</h2>
+<p>All endpoints are relative to <code>https://api.paraengage.com/v1</code>. List endpoints are cursor-paginated with <code>limit</code> and <code>starting_after</code>. Amounts are in INR with two decimals.</p>
+
+<h3 id="ref-calls">Click to Call: create a call</h3>
+<div class="ep"><span class="verb post">POST</span> /calls</div>
+<div class="tbl"><table><thead><tr><th>Parameter</th><th>Type</th><th>Description</th></tr></thead><tbody>
+<tr><td><code>from</code><span class="req">required</span></td><td>string</td><td>A ParaEngage number in your workspace, E.164. Shown to both parties.</td></tr>
+<tr><td><code>agent</code><span class="req">required</span></td><td>string</td><td>Agent's mobile, or an agent id (<code>agt_...</code>) to ring the browser dialer.</td></tr>
+<tr><td><code>customer</code><span class="req">required</span></td><td>string</td><td>Customer number, E.164.</td></tr>
+<tr><td><code>record</code><span class="opt">optional</span></td><td>boolean</td><td>Record the call. Default <code>false</code>. Recording billed per minute.</td></tr>
+<tr><td><code>ring_timeout</code><span class="opt">optional</span></td><td>integer</td><td>Seconds to ring each leg. 5 to 60. Default 30.</td></tr>
+<tr><td><code>webhook_url</code><span class="opt">optional</span></td><td>string</td><td>Overrides the workspace webhook for this call.</td></tr>
+<tr><td><code>metadata</code><span class="opt">optional</span></td><td>object</td><td>Up to 20 key-value pairs, echoed in every webhook. Use for CRM ids.</td></tr>
+</tbody></table></div>
+<p>Legacy console fields map as follows: TID → <code>id</code>, CID → <code>customer</code>, FPN → <code>from</code>, SPN → <code>agent</code>, BID → <code>metadata.batch_id</code>, BST → <code>status</code>.</p>
+
+<h3 id="ref-get-call">Get a call</h3>
+<div class="ep"><span class="verb get">GET</span> /calls/{id}</div>
+<div class="codebox"><div class="tabs"><button class="on">200 OK</button></div><pre>{
+  <span class="m">"id"</span>: <span class="s">"call_01HXK3M9Q2R7"</span>,
+  <span class="m">"status"</span>: <span class="s">"completed"</span>,
+  <span class="m">"direction"</span>: <span class="s">"outbound"</span>,
+  <span class="m">"duration_seconds"</span>: <span class="n">42</span>,
+  <span class="m">"agent_answered_at"</span>: <span class="s">"2026-10-04T09:30:18+05:30"</span>,
+  <span class="m">"customer_answered_at"</span>: <span class="s">"2026-10-04T09:30:24+05:30"</span>,
+  <span class="m">"ended_at"</span>: <span class="s">"2026-10-04T09:31:06+05:30"</span>,
+  <span class="m">"recording"</span>: { <span class="m">"id"</span>: <span class="s">"rec_01HXK4..."</span>, <span class="m">"url"</span>: <span class="s">"https://api.paraengage.com/v1/recordings/rec_01HXK4.mp3"</span> },
+  <span class="m">"cost"</span>: { <span class="m">"currency"</span>: <span class="s">"INR"</span>, <span class="m">"amount"</span>: <span class="n">1.50</span> },
+  <span class="m">"metadata"</span>: { <span class="m">"crm_lead_id"</span>: <span class="s">"L-20931"</span> }
+}</pre></div>
+<p>Status values: <code>queued</code>, <code>ringing_agent</code>, <code>ringing_customer</code>, <code>in_progress</code>, <code>completed</code>, <code>failed</code> (with <code>failure_reason</code>: <code>busy</code>, <code>no_answer</code>, <code>agent_declined</code>, <code>invalid_number</code>).</p>
+
+<h3 id="ref-recordings">Recordings</h3>
+<div class="ep"><span class="verb get">GET</span> /recordings/{id}</div>
+<div class="ep"><span class="verb del">DELETE</span> /recordings/{id}</div>
+<p>Recordings are MP3, retained 90 days by default. Fetch with the same bearer key. Set <code>retention_days</code> per workspace in the console.</p>
+
+<h3 id="ref-numbers">Numbers API</h3>
+<div class="ep"><span class="verb get">GET</span> /numbers/available?city=bengaluru&amp;type=local</div>
+<div class="ep"><span class="verb post">POST</span> /numbers</div>
+<div class="codebox"><div class="tabs"><button class="on">Request</button></div><pre>{ <span class="m">"number"</span>: <span class="s">"+918071280111"</span>, <span class="m">"use_for"</span>: [<span class="s">"click_to_call"</span>, <span class="s">"ivr"</span>] }</pre></div>
+<p>Rental and per-minute rates are returned in the availability response before purchase. Purchase fails with <code>402</code> if the wallet cannot cover the first month.</p>
+
+<h3 id="ref-ivr">Virtual Receptionist (IVR)</h3>
+<div class="ep"><span class="verb post">POST</span> /ivr/flows</div>
+<div class="codebox"><div class="tabs"><button class="on">Request</button></div><pre>{
+  <span class="m">"number"</span>: <span class="s">"+918071280111"</span>,
+  <span class="m">"greeting"</span>: { <span class="m">"tts"</span>: <span class="s">"Welcome to PaisaSpot."</span>, <span class="m">"language"</span>: <span class="s">"en-IN"</span> },
+  <span class="m">"menu"</span>: [
+    { <span class="m">"key"</span>: <span class="s">"1"</span>, <span class="m">"label"</span>: <span class="s">"Orders"</span>,   <span class="m">"action"</span>: { <span class="m">"type"</span>: <span class="s">"ring_group"</span>, <span class="m">"agents"</span>: [<span class="s">"agt_01A"</span>, <span class="s">"agt_01B"</span>] } },
+    { <span class="m">"key"</span>: <span class="s">"2"</span>, <span class="m">"label"</span>: <span class="s">"Payments"</span>, <span class="m">"action"</span>: { <span class="m">"type"</span>: <span class="s">"ai_agent"</span>, <span class="m">"agent_id"</span>: <span class="s">"aia_01C"</span> } }
+  ],
+  <span class="m">"after_hours"</span>: { <span class="m">"action"</span>: { <span class="m">"type"</span>: <span class="s">"ai_agent"</span>, <span class="m">"agent_id"</span>: <span class="s">"aia_01C"</span> } }
+}</pre></div>
+
+<h3 id="ref-robo">Robo Call campaigns</h3>
+<div class="ep"><span class="verb post">POST</span> /robocalls</div>
+<div class="codebox"><div class="tabs"><button class="on">Request</button></div><pre>{
+  <span class="m">"from"</span>: <span class="s">"+918071280111"</span>,
+  <span class="m">"audio_url"</span>: <span class="s">"https://cdn.yourco.in/renewal-reminder.mp3"</span>,
+  <span class="m">"recipients"</span>: [{ <span class="m">"to"</span>: <span class="s">"+919700000002"</span>, <span class="m">"metadata"</span>: { <span class="m">"policy"</span>: <span class="s">"P-88"</span> } }],
+  <span class="m">"schedule_at"</span>: <span class="s">"2026-10-05T10:00:00+05:30"</span>,
+  <span class="m">"dtmf_capture"</span>: <span class="n">true</span>
+}</pre></div>
+
+<h3 id="ref-wa">WhatsApp API</h3>
+<div class="ep"><span class="verb post">POST</span> /whatsapp/messages</div>
+<div class="codebox" data-tabs><div class="tabs"><button class="on" data-t="t">Template</button><button data-t="f">Free-form reply</button><button data-t="m">Media</button></div>
+<pre data-t="t">{
+  <span class="m">"from"</span>: <span class="s">"+918071280111"</span>,
+  <span class="m">"to"</span>: <span class="s">"+919700000005"</span>,
+  <span class="m">"template"</span>: {
+    <span class="m">"name"</span>: <span class="s">"order_shipped"</span>,
+    <span class="m">"language"</span>: <span class="s">"en"</span>,
+    <span class="m">"variables"</span>: { <span class="m">"1"</span>: <span class="s">"Priya"</span>, <span class="m">"2"</span>: <span class="s">"PS-10422"</span> },
+    <span class="m">"buttons"</span>: [{ <span class="m">"type"</span>: <span class="s">"url"</span>, <span class="m">"url_suffix"</span>: <span class="s">"PS-10422"</span> }]
+  }
+}</pre>
+<pre class="hidden" data-t="f">{
+  <span class="m">"from"</span>: <span class="s">"+918071280111"</span>,
+  <span class="m">"to"</span>: <span class="s">"+919700000005"</span>,
+  <span class="m">"text"</span>: <span class="s">"Hi Priya, your refund was processed this morning."</span>
+}
+<span class="c">// Free-form messages are allowed only inside the 24-hour customer service window.</span></pre>
+<pre class="hidden" data-t="m">{
+  <span class="m">"from"</span>: <span class="s">"+918071280111"</span>,
+  <span class="m">"to"</span>: <span class="s">"+919700000005"</span>,
+  <span class="m">"media"</span>: { <span class="m">"type"</span>: <span class="s">"document"</span>, <span class="m">"url"</span>: <span class="s">"https://cdn.yourco.in/invoice-10422.pdf"</span>, <span class="m">"caption"</span>: <span class="s">"Your invoice"</span> }
+}</pre></div>
+<div class="ep"><span class="verb post">POST</span> /whatsapp/templates <span style="color:var(--muted);font-family:var(--font);font-size:13px">submit for Meta approval</span></div>
+<div class="ep"><span class="verb get">GET</span> /whatsapp/templates?status=approved</div>
+<p>Conversation categories and the Meta pass-through rate are returned on every message as <code>cost.category</code> (<code>utility</code>, <code>marketing</code>, <code>authentication</code>, <code>service</code>).</p>
+
+<h3 id="ref-sms">SMS and OTP API</h3>
+<div class="ep"><span class="verb post">POST</span> /sms/messages</div>
+<div class="codebox"><div class="tabs"><button class="on">Request</button></div><pre>{
+  <span class="m">"sender_id"</span>: <span class="s">"PAISAS"</span>,
+  <span class="m">"to"</span>: <span class="s">"+919700000005"</span>,
+  <span class="m">"dlt_template_id"</span>: <span class="s">"1107161234567890123"</span>,
+  <span class="m">"variables"</span>: [<span class="s">"482913"</span>, <span class="s">"10"</span>]
+}</pre></div>
+<div class="ep"><span class="verb post">POST</span> /otp/send</div>
+<div class="ep"><span class="verb post">POST</span> /otp/verify</div>
+<div class="codebox" data-tabs><div class="tabs"><button class="on" data-t="a">/otp/send</button><button data-t="b">/otp/verify</button></div>
+<pre data-t="a">{ <span class="m">"to"</span>: <span class="s">"+919700000005"</span>, <span class="m">"channel"</span>: [<span class="s">"sms"</span>, <span class="s">"whatsapp"</span>], <span class="m">"length"</span>: <span class="n">6</span>, <span class="m">"ttl_seconds"</span>: <span class="n">600</span> }
+<span class="c">// → { "otp_id": "otp_01HX...", "channel_used": "whatsapp", "expires_at": "..." }</span></pre>
+<pre class="hidden" data-t="b">{ <span class="m">"otp_id"</span>: <span class="s">"otp_01HX..."</span>, <span class="m">"code"</span>: <span class="s">"482913"</span> }
+<span class="c">// → { "verified": true }   or   { "verified": false, "reason": "expired" | "mismatch" | "too_many_attempts" }</span></pre></div>
+<p>DLT entity id, header and templates are managed in Console → Messaging → SMS → DLT. The API rejects unregistered templates with <code>422 template_not_approved</code>.</p>
+
+<h3 id="ref-rcs">RCS API</h3>
+<div class="ep"><span class="verb post">POST</span> /rcs/messages</div>
+<div class="codebox"><div class="tabs"><button class="on">Rich card</button></div><pre>{
+  <span class="m">"to"</span>: <span class="s">"+919700000005"</span>,
+  <span class="m">"card"</span>: {
+    <span class="m">"title"</span>: <span class="s">"How was your delivery?"</span>,
+    <span class="m">"media_url"</span>: <span class="s">"https://cdn.yourco.in/thanks.png"</span>,
+    <span class="m">"suggestions"</span>: [{ <span class="m">"type"</span>: <span class="s">"reply"</span>, <span class="m">"text"</span>: <span class="s">"5 stars"</span> }, { <span class="m">"type"</span>: <span class="s">"open_url"</span>, <span class="m">"text"</span>: <span class="s">"Leave a review"</span>, <span class="m">"url"</span>: <span class="s">"https://pe.ly/r8Qz"</span> }]
+  },
+  <span class="m">"fallback"</span>: { <span class="m">"channel"</span>: <span class="s">"sms"</span>, <span class="m">"dlt_template_id"</span>: <span class="s">"1107..."</span> }
+}</pre></div>
+
+<h3 id="ref-email">Email API</h3>
+<div class="ep"><span class="verb post">POST</span> /email/send</div>
+<div class="codebox"><div class="tabs"><button class="on">Request</button></div><pre>{
+  <span class="m">"from"</span>: { <span class="m">"email"</span>: <span class="s">"hello@yourco.in"</span>, <span class="m">"name"</span>: <span class="s">"PaisaSpot"</span> },
+  <span class="m">"to"</span>: [{ <span class="m">"email"</span>: <span class="s">"priya@example.com"</span> }],
+  <span class="m">"template_id"</span>: <span class="s">"tpl_welcome"</span>,
+  <span class="m">"variables"</span>: { <span class="m">"first_name"</span>: <span class="s">"Priya"</span> },
+  <span class="m">"track"</span>: { <span class="m">"opens"</span>: <span class="n">true</span>, <span class="m">"clicks"</span>: <span class="n">true</span> }
+}</pre></div>
+<p>Verify a sending domain with the DNS records from <code>GET /email/domains/{id}</code> (SPF, DKIM, DMARC). Unverified domains send from a shared ParaEngage domain with a 1,000/day cap.</p>
+
+<h3 id="ref-tiny">Tiny URL API</h3>
+<div class="ep"><span class="verb post">POST</span> /links</div>
+<div class="codebox"><div class="tabs"><button class="on">Request and response</button></div><pre>{ <span class="m">"url"</span>: <span class="s">"https://yourco.in/review?o=PS-10422"</span>, <span class="m">"domain"</span>: <span class="s">"pe.ly"</span>, <span class="m">"expires_in_days"</span>: <span class="n">30</span> }
+<span class="c">// → { "id": "lnk_01HX...", "short_url": "https://pe.ly/r8Qz", "clicks": 0 }</span></pre></div>
+
+<h3 id="ref-agent">AI Agent API</h3>
+<div class="ep"><span class="verb post">POST</span> /ai/agents</div>
+<div class="codebox"><div class="tabs"><button class="on">Request</button></div><pre>{
+  <span class="m">"name"</span>: <span class="s">"Refund helper"</span>,
+  <span class="m">"goal"</span>: <span class="s">"Answer refund and order questions. Book a callback if the customer is unhappy."</span>,
+  <span class="m">"languages"</span>: [<span class="s">"en-IN"</span>, <span class="s">"hi-IN"</span>, <span class="s">"ta-IN"</span>],
+  <span class="m">"voice"</span>: { <span class="m">"id"</span>: <span class="s">"voice_meera"</span>, <span class="m">"speed"</span>: <span class="n">1.0</span> },
+  <span class="m">"knowledge"</span>: [{ <span class="m">"type"</span>: <span class="s">"url"</span>, <span class="m">"url"</span>: <span class="s">"https://yourco.in/help"</span> }, { <span class="m">"type"</span>: <span class="s">"file"</span>, <span class="m">"file_id"</span>: <span class="s">"file_01HX..."</span> }],
+  <span class="m">"tools"</span>: [{ <span class="m">"type"</span>: <span class="s">"webhook"</span>, <span class="m">"name"</span>: <span class="s">"lookup_order"</span>, <span class="m">"url"</span>: <span class="s">"https://yourcrm.in/api/orders"</span> }],
+  <span class="m">"handover"</span>: { <span class="m">"to"</span>: <span class="s">"ring_group:billing"</span>, <span class="m">"when"</span>: [<span class="s">"customer_requests_human"</span>, <span class="s">"sentiment_negative"</span>] }
+}</pre></div>
+<div class="ep"><span class="verb post">POST</span> /ai/agents/{id}/deploy <span style="color:var(--muted);font-family:var(--font);font-size:13px">attach to a number, WhatsApp line or web widget</span></div>
+<div class="codebox"><div class="tabs"><button class="on">Request</button></div><pre>{ <span class="m">"channels"</span>: [{ <span class="m">"type"</span>: <span class="s">"voice"</span>, <span class="m">"number"</span>: <span class="s">"+918071280111"</span> }, { <span class="m">"type"</span>: <span class="s">"whatsapp"</span>, <span class="m">"number"</span>: <span class="s">"+918071280111"</span> }, { <span class="m">"type"</span>: <span class="s">"web"</span> }] }</pre></div>
+<p>Every AI conversation ends with a <code>conversation.completed</code> webhook carrying the transcript, detected intent, summary and the handover record if one happened.</p>
+
+<h3 id="ref-voicebot">AI Voice Bot</h3>
+<p>The Voice Bot is an AI Agent deployed on a voice channel. Use <code>/ai/agents</code> above with <code>channels[].type = "voice"</code>. Per-minute AI pricing applies on top of the call minute.</p>
+
+<h3 id="ref-chatbot">Chat Bot widget</h3>
+<div class="codebox"><div class="tabs"><button class="on">HTML</button></div><pre>&lt;script src=<span class="s">"https://cdn.paraengage.com/widget.js"</span>
+  data-agent=<span class="s">"aia_01C"</span>
+  data-token=<span class="s">"pe_pub_7d2e..."</span>   <span class="c">&lt;!-- public widget token, safe for browsers --&gt;</span>
+  data-position=<span class="s">"bottom-right"</span>&gt;&lt;/script&gt;</pre></div>
+
+<h3 id="ref-video">Parameet rooms API</h3>
+<div class="ep"><span class="verb post">POST</span> /video/rooms</div>
+<div class="codebox"><div class="tabs"><button class="on">Request and response</button></div><pre>{ <span class="m">"name"</span>: <span class="s">"KYC with Priya"</span>, <span class="m">"max_participants"</span>: <span class="n">2</span>, <span class="m">"record"</span>: <span class="n">true</span>, <span class="m">"expires_in_minutes"</span>: <span class="n">60</span> }
+<span class="c">// → { "id": "room_01HX...", "join_url": "https://meet.paraengage.com/r/x9Qk2", "host_token": "...", "guest_token": "..." }</span></pre></div>
+
+<h2 id="webhooks">Webhooks</h2>
+<p>Set a workspace webhook in Console → Build → Webhooks, or per request with <code>webhook_url</code>. Every delivery is a POST with a JSON body, signed with your webhook secret. The console has a "Send test webhook" button for every event type.</p>
+<div class="tbl"><table><thead><tr><th>Event</th><th>When</th></tr></thead><tbody>
+<tr><td><code>call.ringing</code>, <code>call.answered</code>, <code>call.completed</code>, <code>call.failed</code></td><td>Click to Call, IVR and Robo Call legs</td></tr>
+<tr><td><code>message.sent</code>, <code>message.delivered</code>, <code>message.read</code>, <code>message.failed</code></td><td>WhatsApp, SMS, RCS, Email</td></tr>
+<tr><td><code>message.received</code></td><td>Inbound WhatsApp, RCS or SMS reply</td></tr>
+<tr><td><code>otp.verified</code>, <code>otp.expired</code></td><td>OTP API</td></tr>
+<tr><td><code>conversation.completed</code>, <code>conversation.handover</code></td><td>AI Agent, Voice Bot, Chat Bot</td></tr>
+<tr><td><code>wallet.low_balance</code>, <code>wallet.recharged</code></td><td>Wallet</td></tr>
+</tbody></table></div>
+<div class="codebox" data-tabs><div class="tabs"><button class="on" data-t="p">call.completed payload</button><button data-t="v">Verify signature (Node)</button></div>
+<pre data-t="p">POST https://yourcrm.in/hooks/paraengage
+X-ParaEngage-Signature: t=1791105000,v1=5f8d2c...
+X-ParaEngage-Event: call.completed
+
+{
+  <span class="m">"id"</span>: <span class="s">"evt_01HXK5..."</span>,
+  <span class="m">"type"</span>: <span class="s">"call.completed"</span>,
+  <span class="m">"created_at"</span>: <span class="s">"2026-10-04T09:31:07+05:30"</span>,
+  <span class="m">"test"</span>: <span class="n">false</span>,
+  <span class="m">"data"</span>: {
+    <span class="m">"id"</span>: <span class="s">"call_01HXK3M9Q2R7"</span>,
+    <span class="m">"status"</span>: <span class="s">"completed"</span>,
+    <span class="m">"agent"</span>: <span class="s">"+919800000001"</span>,
+    <span class="m">"customer"</span>: <span class="s">"+919700000002"</span>,
+    <span class="m">"duration_seconds"</span>: <span class="n">42</span>,
+    <span class="m">"recording_url"</span>: <span class="s">"https://api.paraengage.com/v1/recordings/rec_01HXK4.mp3"</span>,
+    <span class="m">"cost"</span>: { <span class="m">"currency"</span>: <span class="s">"INR"</span>, <span class="m">"amount"</span>: <span class="n">1.50</span> },
+    <span class="m">"metadata"</span>: { <span class="m">"crm_lead_id"</span>: <span class="s">"L-20931"</span> }
+  }
+}</pre>
+<pre class="hidden" data-t="v"><span class="k">import</span> crypto <span class="k">from</span> <span class="s">"crypto"</span>;
+
+<span class="k">function</span> verify(rawBody, header, secret) {
+  <span class="k">const</span> [t, v1] = header.split(<span class="s">","</span>).map(p => p.split(<span class="s">"="</span>)[1]);
+  <span class="k">const</span> expected = crypto.createHmac(<span class="s">"sha256"</span>, secret).update(t + <span class="s">"."</span> + rawBody).digest(<span class="s">"hex"</span>);
+  <span class="k">return</span> crypto.timingSafeEqual(Buffer.from(expected), Buffer.from(v1));
+}</pre></div>
+<p>Respond with any 2xx within 10 seconds. Failed deliveries retry at 1, 5, 30 and 120 minutes, then move to the dead-letter list in the console.</p>
+
+<h2 id="sdks">SDKs and tools</h2>
+<div class="cards">
+<div class="card"><b>Node.js</b><span><code>npm i @paraengage/sdk</code></span></div>
+<div class="card"><b>Python</b><span><code>pip install paraengage</code></span></div>
+<div class="card"><b>PHP</b><span><code>composer require paraengage/sdk</code></span></div>
+<div class="card"><b>Java</b><span><code>com.paraengage:sdk</code></span></div>
+<div class="card"><b>Go</b><span><code>go get github.com/paraengage/go</code></span></div>
+<div class="card"><b>Postman</b><span>Collection with every endpoint and a test-key environment.</span></div>
+<div class="card"><b>OpenAPI 3.1</b><span><code>GET /openapi.json</code> for code generation.</span></div>
+<div class="card"><b>CLI</b><span><code>npx paraengage calls create ...</code></span></div>
+</div>
+
+<h2 id="wallet">Wallet and usage API</h2>
+<div class="ep"><span class="verb get">GET</span> /wallet</div>
+<div class="ep"><span class="verb get">GET</span> /usage?from=2026-10-01&amp;to=2026-10-31&amp;group_by=product</div>
+<div class="codebox"><div class="tabs"><button class="on">GET /wallet</button></div><pre>{ <span class="m">"balance"</span>: { <span class="m">"currency"</span>: <span class="s">"INR"</span>, <span class="m">"amount"</span>: <span class="n">999.84</span> }, <span class="m">"plan"</span>: <span class="s">"growth"</span>, <span class="m">"low_balance_threshold"</span>: <span class="n">500</span>, <span class="m">"auto_recharge"</span>: { <span class="m">"enabled"</span>: <span class="n">true</span>, <span class="m">"amount"</span>: <span class="n">2000</span> } }</pre></div>
+
+<h2 id="changelog">Changelog</h2>
+<p><span class="pill">2026-10</span> v1 draft reference published. One key across all products. Legacy Click to Call fields mapped. Test mode and sandbox numbers added.</p>
+
+<h2 id="glossary">Glossary</h2>
+<div class="tbl"><table><tbody>
+<tr><td><b>Workspace</b></td><td>One company account with its own wallet, keys, numbers and agents.</td></tr>
+<tr><td><b>Masked call</b></td><td>A bridged call where neither party sees the other's number, only the ParaEngage number.</td></tr>
+<tr><td><b>DLT</b></td><td>TRAI's Distributed Ledger Technology registry for SMS senders and templates in India.</td></tr>
+<tr><td><b>Conversation (WhatsApp)</b></td><td>A 24-hour window opened by a template or customer message, billed by category.</td></tr>
+<tr><td><b>Handover</b></td><td>An AI agent passing the conversation to a human with transcript and context attached.</td></tr>
+</tbody></table></div>
+</div>
+</main>
+
+<aside class="toc"><div>
+<h5>ON THIS PAGE</h5>
+<a href="#popular">Popular documentation</a><a href="#quickstart">Quickstart</a><a href="#auth">Authentication</a><a href="#sandbox">Test mode</a><a href="#errors">Errors and rate limits</a><a href="#reference">API reference</a><a href="#webhooks">Webhooks</a><a href="#sdks">SDKs and tools</a><a href="#wallet">Wallet and usage</a><a href="#changelog">Changelog</a><a href="#glossary">Glossary</a>
+</div></aside>
+</div>
+
+<footer><div>ParaEngage Developer Docs · draft v1 · illustrative values</div><div>connect@parahittech.com · Status · Terms · Privacy</div></footer>
+
+<script>
+(function(){
+document.querySelectorAll('[data-tabs]').forEach(function(box){
+  var btns=box.querySelectorAll('.tabs button[data-t]'),pres=box.querySelectorAll('pre[data-t]');
+  btns.forEach(function(b){b.addEventListener('click',function(){btns.forEach(function(x){x.classList.remove('on')});b.classList.add('on');pres.forEach(function(p){p.classList.toggle('hidden',p.getAttribute('data-t')!==b.getAttribute('data-t'))})})});
+});
+document.querySelectorAll('[data-copy]').forEach(function(b){b.addEventListener('click',function(){var box=b.closest('.codebox'),pre=box.querySelector('pre:not(.hidden)');try{navigator.clipboard.writeText(pre.textContent).then(function(){b.textContent='Copied'},function(){b.textContent='Select text'})}catch(e){b.textContent='Select text'}setTimeout(function(){b.textContent='Copy'},1500)})});
+var links=document.querySelectorAll('.side a[href^="#"]');
+function mark(){var y=window.scrollY+120,cur=null;document.querySelectorAll('main [id]').forEach(function(h){if(h.offsetTop<=y)cur=h.id});links.forEach(function(a){a.classList.toggle('on',a.getAttribute('href')==='#'+cur)})}
+window.addEventListener('scroll',mark,{passive:true});mark();
+var q=document.getElementById('q');document.addEventListener('keydown',function(e){if(e.key==='/'&&document.activeElement!==q){e.preventDefault();q.focus()}});
+q.addEventListener('input',function(){var v=q.value.trim().toLowerCase();links.forEach(function(a){a.style.display=!v||a.textContent.toLowerCase().indexOf(v)>-1?'':'none'})});
+})();
+</script>
+</body>
+</html>
